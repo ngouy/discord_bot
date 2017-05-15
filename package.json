@@ -1,0 +1,15 @@
+{
+  "name": "morpion",
+  "version": "0.0.1",
+  "description": "an awesome bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ngouy",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js-commando": "^0.9.0",
+    "underscore": "^1.8.3"
+  }
+}
