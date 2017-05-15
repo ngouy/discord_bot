@@ -1,8 +1,17 @@
 const commando = require('discord.js-commando');
 const _ = require('underscore');
+const game_cmds = ["test:yolo"];
 
 class MorpionCommand extends commando.Command {
   constructor(client) {
+    client.on('message', message => {
+      if (_.contains(game_cmds, message.content)) {
+        message.reply('pong');
+      }
+    });
+    // ["test_yolo"].forEach(message => {
+    //   new Commando.CommandMessage(message, play, message.split(), patternMatches);
+    // })
     super(client, {
       name: 'morpion',
       group: 'games',
