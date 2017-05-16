@@ -1,8 +1,5 @@
 /*
 ** to do
-** - allow player to finish game
-** - block multiples morpions
-** - print current morpion
 ** - print global score
 ** - print personal score
 */
@@ -45,6 +42,10 @@ class Morpion {
 
   static if_you_want_to_play(channel, author) {
     channel.send('if you want to play blablabla');
+  }
+
+  static already_have_morpion(morpion, player) {
+    morpion.channel.send(`${player} you already have a morpion on goin with ${morpion.player1.id == player.id ? morpion.player2 : morpion.player1}, tap \`!morpion turn\` to have the summary`);
   }
 
   /*
@@ -148,6 +149,24 @@ class Morpion {
 
   /* mains */
 
+  turn() {
+    this.channel.send(`${this.player1} vs ${this.player2}`)
+    this.channel.send(`${this.grid()}\n`);
+    this.channel.send(`It's ${this.current_player} turn`);
+  }
+
+  give_up(player) {
+    if (player.id == this.id) {
+      this.current_player = this.player2;
+      this.next_player = this.player1;
+    } else {
+      this.next_player = this.player2;
+      this.current_player = this.player1;
+    }
+    this.channel(`${player} surrend...`);
+    this.wins();
+  }
+
   wins() {
     this.channel.send(`${this.current_player} beat ${this.next_player}. GG feeder`);
     this.destroy();
@@ -204,6 +223,7 @@ class MorpionCommand extends commando.Command {
       if (_.contains(game_cmds, message.content)) {
         const current_morpion = Morpion.find(message.author.id);
         if(Morpion.find(message.author.id)) {
+          current_morpion.channel = message.channel;
           current_morpion.play(message.author, message.content);
         } else {
           Morpion.if_you_want_to_play(message.channel, message.author);
@@ -219,19 +239,38 @@ class MorpionCommand extends commando.Command {
   }
 
   async run(message, args) {
-    const mentions = _.uniq(message.mentions.members.array());
-    message.channel.send(message.content);
-    // if (message.content)
-  //   if(mentions.length === 0)
-  //     message.channel.send(`lets play a morpion ! But you first need to mention someone to play with !\nfor example : !morpion @Zerk`);
-  //   else if(mentions.length > 2 || (mentions.length == 2 && !_.contains(_.map(mentions, m => m.id), message.author.id) ) )
-  //     message.channel.send(`Too much people !! Morpion is a 1v1 game ..`);
-  //   else if(mentions[0].id == message.author.id)
-  //     message.channel.send(`wtf bro, u mad ?? PLay against urself ?`);
-  //   else if(mentions[0].user.bot)
-  //     message.channel.send(`sorry bro, others bot are not good enought to play morpion with you...`);
-  //   else
-  //     Morpion.new(message.author, mentions[0], message.channel);
+    const m = Morpion.find(message.author.id);
+    if (m) { m.channel = message.channel; }
+    if (message.content.replace(/ /g,'').toLowerCase() === "!morpion stop") {
+      if (!m) {
+        message.channel.send("you have no morpion in progress");
+        Morpion.if_you_want_to_play(message.channel, message.author);
+      } else {
+        m.give_up(message.author);
+      }
+    } else if (message.content.replace(/ /g,'').toLowerCase() === "!morpion turn") {
+      if (!m) {
+        message.channel.send("you have no morpion in progress");
+        Morpion.if_you_want_to_play(message.channel, message.author);
+      } else {
+        m.turn();
+      }
+    } else {
+      const mentions = _.uniq(message.mentions.members.array());
+      if (m) {
+        Morpion.already_have_morpion(m, message.author);
+      }
+      else if(mentions.length === 0)
+        message.channel.send(`lets play a morpion ! But you first need to mention someone to play with !\nfor example : !morpion @Zerk`);
+      else if(mentions.length > 2 || (mentions.length == 2 && !_.contains(_.map(mentions, m => m.id), message.author.id) ) )
+        message.channel.send(`Too much people !! Morpion is a 1v1 game ..`);
+      else if(mentions[0].id == message.author.id)
+        message.channel.send(`wtf bro, u mad ?? PLay against urself ?`);
+      else if(mentions[0].user.bot)
+        message.channel.send(`sorry bro, others bot are not good enought to play morpion with you...`);
+      else
+        Morpion.new(message.author, mentions[0], message.channel);
+    }
   }
 }
 
