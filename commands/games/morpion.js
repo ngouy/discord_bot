@@ -108,7 +108,7 @@ class Morpion {
                          grid[2][0] * prime_number_grid[2][0] ;
   }
 
-  recalculate_diags = () => { recalculate_diag_1(1); recalculate_diag_2(1); }
+  recalculate_diags() { recalculate_diag_1(1); recalculate_diag_2(1); }
 
   recalculate_score(move) {
     const x = move[1];
