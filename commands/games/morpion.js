@@ -41,7 +41,7 @@ class Morpion {
   }
 
   static if_you_want_to_play(channel, author) {
-    channel.send('if you want to play blablabla');
+    message.channel.send(`lets play a morpion ! But you first need to mention someone to play with !\nfor example : !morpion @Zerk`);
   }
 
   static already_have_morpion(morpion, player) {
