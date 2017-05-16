@@ -241,6 +241,7 @@ class MorpionCommand extends commando.Command {
   async run(message, args) {
     const m = Morpion.find(message.author.id);
     if (m) { m.channel = message.channel; }
+    message.channel.send(message.content.replace(/ /g,'').toLowerCase());
     if (message.content.replace(/ /g,'').toLowerCase() === "!morpion stop") {
       if (!m) {
         message.channel.send("you have no morpion in progress");
