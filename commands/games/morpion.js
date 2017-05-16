@@ -53,7 +53,6 @@ class Morpion {
 
   destroy() {
     on_going_games = _.reject(on_going_games, morp => ((morp.id === this.id) && (this.di === morp.di)));
-    this = null;
   }
 
   constructor(player1, player2, channel) {
