@@ -269,7 +269,7 @@ class MorpionCommand extends commando.Command {
       else if(mentions[0].user.bot)
         message.channel.send(`sorry bro, others bot are not good enought to play morpion with you...`);
       else
-        Morpion.new(message.author, mentions[0], message.channel);
+        new Morpion(message.author, mentions[0], message.channel);
     }
   }
 }
