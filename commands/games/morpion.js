@@ -11,14 +11,19 @@ const game_cmds = ["A:0", "A:1", "A:2",
                    "C:0", "C:1", "C:2"];
 
 let on_going_games = [];
-fs.readFile('scores.json', 'utf8', function readFileCallback(err, data){
+let scores = [];
+fs.readFile('scores.json', 'utf8', (err, data) => {
     if (err){
-        console.log(err);
+      console.log(err);
     } else {
-    on_going_games = JSON.parse(data);
+    console.log('--------');
+    console.log(data);
+    scores = JSON.parse(data);
+    console.log('--------');
+    console.log(scores);
+    console.log('--------');
   }
 });
-let scores = [];
 // {
 //   id: this.player1.id,
 //   player: this.player1,
@@ -59,6 +64,7 @@ class Morpion {
   }
 
   static my_score(player, channel) {
+    console.log(scores);
     const score = _.findWhere(scores, {id: player.id});
     if (score) {
       channel.send(`${player} (${scores.indexOf(score) + 1}/${scores.length}):\n\t- winned games: ${score.winned},\n\t- lost games: ${score.losed},\n\t- null: ${score.nullgame}`);
