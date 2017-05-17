@@ -156,7 +156,7 @@ class Morpion {
 
   turn() {
     this.channel.send(`${this.player1} vs ${this.player2}`)
-    this.channel.send(`${this.grid()}\n`);
+    this.channel.send(this.get_grid());
     this.channel.send(`It's ${this.current_player} turn`);
   }
 
