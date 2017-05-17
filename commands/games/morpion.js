@@ -41,14 +41,14 @@ class Morpion {
       let cur_score = scores[i - 1];
       msg += (`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
     }
-    mgs += 'The best you can do is to forget them, they are not your friends, you dont even know them. How the fuck they can be in this channel to play morpion !?'
+    msg += 'The best you can do is to forget them, they are not your friends, you dont even know them. How the fuck they can be in this channel to play morpion !?'
     channel.send(msg);
   }
 
   static my_score(player, channel) {
     const score = _.findWhere(scores, {id: player.id});
     if (score) {
-      channel.send(`${player} (${scores.indexOf(score)}/${score.length}):\n\t- winned games: ${score.winned},\n\t- lost games: ${score.losed},\n\t- null: ${score.nullgame}`);
+      channel.send(`${player} (${scores.indexOf(score)}/${scores.length}):\n\t- winned games: ${score.winned},\n\t- lost games: ${score.losed},\n\t- null: ${score.nullgame}`);
     } else {
       channel.send('you havent play at morpion yet !');
       Morpion.if_you_want_to_play(channel, player);
