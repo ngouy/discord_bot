@@ -69,17 +69,13 @@ class Morpion {
 
   recalculate_line(y) {
     const grid = this.grid;
-    const res = grid[0][y] * grid[1][y] *  grid[2][y];
-    console.log(`y = ${y}`);
-    console.log(res)
+    const res = grid[y][0] * grid[y][1] *  grid[y][2];
     if (res === 1 ||res === 8 ) { this.wins(); }
   }
 
   recalculate_column(x) {
     const grid = this.grid;
-    const res =  grid[x][0] * grid[x][1] * grid[x][2];
-    console.log(`x = ${x}`);
-    console.log(res)
+    const res =  grid[0][x] * grid[1][x] * grid[2][x];
     if (res === 1 || res === 8 ) { this.wins(); }
   }
 
@@ -104,7 +100,6 @@ class Morpion {
     const x = move[1];
     const y = move[0];
     let res = 0;
-    console.log([this.grid[0].toString(), this.grid[1].toString(), this.grid[2].toString()]);
     this.recalculate_line(y);
     this.recalculate_column(x);
     if (x == y && x == 1) {
@@ -252,22 +247,21 @@ class MorpionCommand extends commando.Command {
   async run(message, args) {
     const m = Morpion.find(message.author.id);
     if (m) { m.channel = message.channel; }
-    if (message.content.replace(/ /g,'').toLowerCase() === "!morpionstop") {
+    const short_mess = message.content.replace(/ /g,'').toLowerCase()
+    if (short_mess === "!morpion/ff" || short_mess == "!morpionstop") {
       if (!m) {
         message.channel.send("you have no morpion in progress");
         Morpion.if_you_want_to_play(message.channel, message.author);
       } else {
         m.give_up(message.author);
       }
-    } else if (message.content.replace(/ /g,'').toLowerCase() === "!morpionturn") {
+    } else if (short_mess === "!morpionturn") {
       if (!m) {
         message.channel.send("you have no morpion in progress");
         Morpion.if_you_want_to_play(message.channel, message.author);
       } else {
         m.turn();
       }
-    } else if (message.content.replace(/ /g,'').toLowerCase() === "!morpiondebug") {
-      console.log(on_going_games);
     } else {
       const mentions = _.uniq(message.mentions.members.array());
       if (m) {
