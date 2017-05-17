@@ -50,8 +50,8 @@ class Morpion {
     msg += ('\napplause them, praise them, ask them how to the fuck you should play\n\nMorpions NOOBS FEEDERS are => \n');
     for (let i = sc_l - min + 1; i <= sc_l; i++) {
       console.log(i);
-      console.log(`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
       let cur_score = scores[i - 1];
+      console.log(`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
       msg += (`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
     }
     msg += '\nThe best you can do is to forget them, they are not your friends, you dont even know them. How the fuck they can be in this channel to play morpion !?'
