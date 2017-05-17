@@ -127,6 +127,8 @@ class Morpion {
       grid += `| ${x === 0 ? '  A' : x === 1 ? '  B' : '  C'}\n`;
     }
     grid += "------------------\n";
+    grid += `x : ${this.player1}\n`;
+    grid += `o : ${this.player2}\n`;
     return grid;
   }
 
