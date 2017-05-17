@@ -34,26 +34,26 @@ class Morpion {
     let msg = "";
     const sc_l = scores.length;
     msg += (`there are ${sc_l} players\n`);
-    let max = _.max(Math.round(sc_l / 2), 3);
-    let min = _.max(Math.floor(sc_l / 2), 3);
+    let max = _.min(Math.round(sc_l / 2), 3);
+    let min = _.min(Math.floor(sc_l / 2), 3);
     msg += ('Morpions PGM are => \n');
     for (let i = 1; i <= max; i++) {
       let cur_score = scores[i - 1];
       msg += (`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
     }
-    msg += ('\n applause them, praise them, ask them how to the fuck you should play\n\nMorpions NOOBS FEEDERS are => \n');
+    msg += ('\napplause them, praise them, ask them how to the fuck you should play\n\nMorpions NOOBS FEEDERS are => \n');
     for (let i = sc_l - min + 1; i <= sc_l; i++) {
       let cur_score = scores[i - 1];
       msg += (`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
     }
-    msg += 'The best you can do is to forget them, they are not your friends, you dont even know them. How the fuck they can be in this channel to play morpion !?'
+    msg += '\nThe best you can do is to forget them, they are not your friends, you dont even know them. How the fuck they can be in this channel to play morpion !?'
     channel.send(msg);
   }
 
   static my_score(player, channel) {
     const score = _.findWhere(scores, {id: player.id});
     if (score) {
-      channel.send(`${player} (${scores.indexOf(score)}/${scores.length}):\n\t- winned games: ${score.winned},\n\t- lost games: ${score.losed},\n\t- null: ${score.nullgame}`);
+      channel.send(`${player} (${scores.indexOf(score) + 1}/${scores.length}):\n\t- winned games: ${score.winned},\n\t- lost games: ${score.losed},\n\t- null: ${score.nullgame}`);
     } else {
       channel.send('you havent play at morpion yet !');
       Morpion.if_you_want_to_play(channel);
