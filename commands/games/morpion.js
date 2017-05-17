@@ -26,6 +26,11 @@ class Morpion {
   */
 
   static global_rank(channel) {
+    if (scores.length === 0) {
+      channel.send('no games have boon played for now');
+      Morpion.if_you_want_to_play(channel);
+      return;
+    }
     let msg = "";
     const sc_l = scores.length;
     msg += (`there are ${sc_l} players\n`);
@@ -51,7 +56,7 @@ class Morpion {
       channel.send(`${player} (${scores.indexOf(score)}/${scores.length}):\n\t- winned games: ${score.winned},\n\t- lost games: ${score.losed},\n\t- null: ${score.nullgame}`);
     } else {
       channel.send('you havent play at morpion yet !');
-      Morpion.if_you_want_to_play(channel, player);
+      Morpion.if_you_want_to_play(channel);
     }
   }
 
@@ -59,7 +64,7 @@ class Morpion {
     return _.findWhere(on_going_games, {id: id_or_di}) || _.findWhere(on_going_games, {di: id_or_di}) || null;
   }
 
-  static if_you_want_to_play(channel, author) {
+  static if_you_want_to_play(channel) {
     channel.send(`lets play a morpion ! But you first need to mention someone to play with !\nfor example : !morpion @Zerk`);
   }
 
@@ -309,7 +314,7 @@ class MorpionCommand extends commando.Command {
           current_morpion.channel = message.channel;
           current_morpion.play(message.author, message.content);
         } else {
-          Morpion.if_you_want_to_play(message.channel, message.author);
+          Morpion.if_you_want_to_play(message.channe);
         }
       }
     });
@@ -332,14 +337,14 @@ class MorpionCommand extends commando.Command {
     } else if (short_mess === "!morpion/ff" || short_mess == "!morpionstop") {
       if (!m) {
         message.channel.send("you have no morpion in progress");
-        Morpion.if_you_want_to_play(message.channel, message.author);
+        Morpion.if_you_want_to_play(message.channel);
       } else {
         m.give_up(message.author);
       }
     } else if (short_mess === "!morpionturn") {
       if (!m) {
         message.channel.send("you have no morpion in progress");
-        Morpion.if_you_want_to_play(message.channel, message.author);
+        Morpion.if_you_want_to_play(message.channel);
       } else {
         m.turn();
       }
