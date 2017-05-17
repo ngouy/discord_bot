@@ -76,7 +76,9 @@ class Morpion {
   recalculate_column(x) {
     const grid = this.grid;
     const res =  grid[x][0] * grid[x][1] * grid[x][2];
-    if (res === 1 ||res === 8 ) { this.wins(); }
+    console.log(`x = ${x}`);
+    console.log(res)
+    if (res === 1 || res === 8 ) { this.wins(); }
   }
 
   recalculate_diag_1(xy) {
