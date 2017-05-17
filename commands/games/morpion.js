@@ -121,21 +121,11 @@ class Morpion {
     if (res === 1 || res === 8 ) { this.wins(); }
   }
 
-  recalculate_diag_1(xy) {
-    const grid = this.grid;
-    const res =  grid[0][0] * grid[1][1] * grid[2][2];
-    if (res === 1 ||res === 8 ) { this.wins(); }
-  }
-
-  recalculate_diag_2(xy) {
-    const grid = this.grid;
-    const res =  grid[0][2] * grid[1][1] * grid[2][0];
-    if (res === 1 ||res === 8 ) { this.wins(); }
-  }
-
   recalculate_diags() {
-    this.recalculate_diag_1(1);
-    this.recalculate_diag_2(1);
+    let res =  grid[0][0] * grid[1][1] * grid[2][2];
+    if (res === 1 ||res === 8 ) { this.wins(); }
+    res =  grid[0][2] * grid[1][1] * grid[2][0];
+    if (res === 1 ||res === 8 ) { this.wins(); }
   }
 
   recalculate_score(move) {
@@ -144,13 +134,7 @@ class Morpion {
     let res = 0;
     this.recalculate_line(y);
     this.recalculate_column(x);
-    if (x == y && x == 1) {
-      this.recalculate_diags();
-    } else if (y == x) {
-      this.recalculate_diag_1(x);
-    } else if (y + x == 2) {
-      this.recalculate_diag_2(x == 0 ? y : x);
-    }
+    this.recalculate_diags();
   }
 
   /* grid rendering */
