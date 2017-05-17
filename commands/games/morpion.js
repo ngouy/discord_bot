@@ -190,7 +190,7 @@ class Morpion {
     move[0] = move[0].toLowerCase().charCodeAt(0) - 97;
     const number = (this.current_player == this.player1) ? 1 : 2;
     if (this.grid[move[0]][move[1]] !== 0) {
-      this.channel.send (`Forbidden move, it's this box (${move[0]}:${move[1]}) is already fill:\n`);
+      this.channel.send (`Forbidden move, it's this box (${String.fromCharCode(65 + move[0])}:${move[1]}) is already fill:\n`);
       this.channel.send(this.get_grid());
       return false;
     }
