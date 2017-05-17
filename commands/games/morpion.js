@@ -89,22 +89,22 @@ class Morpion {
 
   recalculate_diags() {
     let res;
-    res = this.recalculate_diag_1(1);
-    return res || this.recalculate_diag_2(1);
+    res = (res == 1 || res == 8) ? res : this.recalculate_diag_1(1);
+    return (res == 1 || res == 8) ? res : this.recalculate_diag_2(1);
   }
 
   recalculate_score(move) {
     const x = move[1];
     const y = move[0];
     let res = 0;
-    res = res || this.recalculate_line(y);
-    res = res || this.recalculate_column(x);
+    res = (res == 1 || res == 8) ? res : this.recalculate_line(y);
+    res = (res == 1 || res == 8) ? res : this.recalculate_column(x);
     if (x == y && x == 1) {
-      res = res || this.recalculate_diags();
+      res = (res == 1 || res == 8) ? res : this.recalculate_diags();
     } else if (y == x) {
-      res = res || this.recalculate_diag_1(x);
+      res = (res == 1 || res == 8) ? res : this.recalculate_diag_1(x);
     } else if (y + x == 2) {
-      res = res || this.recalculate_diag_2(x == 0 ? y : x);
+      res = (res == 1 || res == 8) ? res : this.recalculate_diag_2(x == 0 ? y : x);
     }
     return res;
   }
@@ -152,6 +152,7 @@ class Morpion {
   }
 
   wins() {
+    this.channel.send(this.get_grid());
     this.channel.send(`${this.current_player} beat ${this.next_player}. GG feeder`);
     this.destroy();
   }
@@ -162,7 +163,7 @@ class Morpion {
   }
 
   how_wins(score) {
-    if (score) {
+    if (score === 1 || score === 8) {
       this.wins();
     } else if (_.include(_.flatten(this.grid), 0)) {
       this.end_normal_turn();
