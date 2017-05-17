@@ -94,14 +94,14 @@ class Morpion {
     const x = move[1];
     const y = move[0];
     let res = 0;
-    res = res || recalculate_line(y);
-    res = res || recalculate_column(x);
+    res = res || this.recalculate_line(y);
+    res = res || this.recalculate_column(x);
     if (x == y && x == 1) {
-      res = res || recalculate_diags();
+      res = res || this.recalculate_diags();
     } else if (y == x) {
-      res = res || recalculate_diag_1(x);
+      res = res || this.recalculate_diag_1(x);
     } else if (y + x == 2) {
-      res = res || recalculate_diag_2(x == 0 ? y : x);
+      res = res || this.recalculate_diag_2(x == 0 ? y : x);
     }
     return res;
   }
@@ -188,6 +188,11 @@ class Morpion {
   }
 
   play(player, move) {
+    console.log('---------');
+    console.log(player.id);
+    console.log(this.next_player.id);
+    console.log(this.current_player.id);
+    console.log('---------');
     if (player.id === this.next_player) {
       this.channel.send(`It's not your turn to play. It's ${this.current_player} one`);
       return;
