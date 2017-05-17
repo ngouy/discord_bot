@@ -170,6 +170,7 @@ class Morpion {
   }
 
   how_wins() {
+    if (this.winned) { return; }
     if (_.include(_.flatten(this.grid), 0)) {
       this.end_normal_turn();
     } else {
