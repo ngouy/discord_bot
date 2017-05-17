@@ -118,7 +118,7 @@ class Morpion {
   }
 
   get_grid() {
-    let grid = "-  0  -   1   -   2  -";
+    let grid = "-  0  -   1   -   2  -\n";
     for(let x = 0; x < 3; x++) {
       grid += "------------------\n";
       for(let y = 0; y < 3; y++) {
