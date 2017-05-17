@@ -11,6 +11,13 @@ const game_cmds = ["A:0", "A:1", "A:2",
 
 let on_going_games = [];
 let scores = [];
+// {
+//   id: this.player1.id,
+//   player: this.player1,
+//   losed: 0,
+//   winned: 0,
+//   nullgame: 0,
+// }
 
 class Morpion {
 
@@ -18,10 +25,30 @@ class Morpion {
   ** static functions
   */
 
+  static global_rank(channel) {
+    let msg = "";
+    const sc_l = scores.length;
+    msg += (`there are ${} players\n`);
+    let max = _.max(Math.round(sc_l / 2), 3);
+    let min = _.max(Math.floor(sc_l / 2), 3);
+    msg += ('Morpions PGM are => \n');
+    for (let i = 1; i <= max; i++) {
+      let cur_score = scores[i - 1];
+      msg += (`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
+    }
+    msg += ('\n applause them, praise them, ask them how to the fuck you should play\n\nMorpions NOOBS FEEDERS are => \n');
+    for (let i = sc_l - min + 1; i <= sc_l; i++) {
+      let cur_score = scores[i - 1];
+      msg += (`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
+    }
+    mgs += 'The best you can do is to forget them, they are not your friends, you dont even know them. How the fuck they can be in this channel to play morpion !?'
+    channel.send(msg);
+  }
+
   static my_score(player, channel) {
     const score = _.findWhere(scores, {id: player.id});
     if (score) {
-      channel.send(`${player}:\n\t- winned games: ${score.winned},\n\t- lost games: ${score.losed},\n\tnull: ${score.nullgame}`);
+      channel.send(`${player} (${scores.indexOf(score)}/${score.length}):\n\t- winned games: ${score.winned},\n\t- lost games: ${score.losed},\n\t- null: ${score.nullgame}`);
     } else {
       channel.send('you havent play at morpion yet !');
       Morpion.if_you_want_to_play(channel, player);
@@ -166,8 +193,8 @@ class Morpion {
   }
 
   push_scores(null_match=false) {
-    let p1_sc = _.findWhere(this.scores, {id: this.player1.id});
-    let p2_sc = _.findWhere(this.scores, {id: this.player2.id});
+    let p1_sc = _.findWhere(scores, {id: this.player1.id});
+    let p2_sc = _.findWhere(scores, {id: this.player2.id});
     if (!p1_sc) {
       p1_sc = {
         id: this.player1.id,
@@ -200,6 +227,7 @@ class Morpion {
         p1_sc.losed = p1_sc.losed + 1
       }
     }
+    scores = _.sortBy(scores, sc => [sc.winned,  -sc.losed, sc.nullgame]).reverse();
   }
 
   wins() {
@@ -243,7 +271,7 @@ class Morpion {
     move[0] = move[0].toLowerCase().charCodeAt(0) - 97;
     const number = (this.current_player == this.player1) ? 1 : 2;
     if (this.grid[move[0]][move[1]] !== 0) {
-      this.channel.send (`Forbidden move, it's this box (${String.fromCharCode(65 + move[0])}:${move[1]}) is already fill:\n`);
+      this.channel.send (`Forbidden move, this box (${String.fromCharCode(65 + move[0])}:${move[1]}) is already fill:\n`);
       this.channel.send(this.get_grid());
       return false;
     }
@@ -299,8 +327,8 @@ class MorpionCommand extends commando.Command {
     const short_mess = message.content.replace(/ /g,'').toLowerCase();
     if (short_mess == "!morpionrank") {
       Morpion.my_score(message.author, message.channel);
-    } else if (short_mess === "!morpionbest") {
-      message.channel.send('not implemented yet');
+    } else if (short_mess === "!morpionglobalrank" || short_mess === "!morpionglobal") {
+      Morpion.global_rank(message.channel);
     } else if (short_mess === "!morpion/ff" || short_mess == "!morpionstop") {
       if (!m) {
         message.channel.send("you have no morpion in progress");
