@@ -195,7 +195,7 @@ class Morpion {
   lets_play() {
     this.channel.send(`${this.player1} has chalenged ${this.player2} on a morpion !
     It has been decided that ${this.current_player} begins !`);
-    this.channel.send(this.grid());
+    this.channel.send(this.get_grid());
   }
 
   process(move) {
