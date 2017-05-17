@@ -36,13 +36,21 @@ class Morpion {
     msg += (`there are ${sc_l} players\n`);
     let max = _.min(Math.round(sc_l / 2), 3);
     let min = _.min(Math.floor(sc_l / 2), 3);
+    console.log(max);
+    console.log(min);
     msg += ('Morpions PGM are => \n');
+    console.log('winners');
     for (let i = 1; i <= max; i++) {
       let cur_score = scores[i - 1];
+      console.log(i);
+      console.log(`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
       msg += (`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
     }
+    console.log('loosers');
     msg += ('\napplause them, praise them, ask them how to the fuck you should play\n\nMorpions NOOBS FEEDERS are => \n');
     for (let i = sc_l - min + 1; i <= sc_l; i++) {
+      console.log(i);
+      console.log(`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
       let cur_score = scores[i - 1];
       msg += (`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
     }
