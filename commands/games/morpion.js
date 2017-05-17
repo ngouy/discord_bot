@@ -63,8 +63,8 @@ class Morpion {
     channel.send(`lets play a morpion ! But you first need to mention someone to play with !\nfor example : !morpion @Zerk`);
   }
 
-  static already_have_morpion(morpion, player) {
-    morpion.channel.send(`${player} you already have a morpion on goin with ${morpion.player1.id == player.id ? morpion.player2 : morpion.player1}, tap \`!morpion turn\` to have the summary`);
+  static already_have_morpion(morpion, player, author=true) {
+    morpion.channel.send(`${player} have a morpion on goin with ${morpion.player1.id == player.id ? morpion.player2 : morpion.player1}${author ? ", tap \`!morpion turn\` to have the summary" : ", you can't play with him for now"}`);
   }
 
   /*
@@ -345,9 +345,8 @@ class MorpionCommand extends commando.Command {
       }
     } else {
       const mentions = _.uniq(message.mentions.members.array());
-      if (m) {
+      if (m)
         Morpion.already_have_morpion(m, message.author);
-      }
       else if(mentions.length === 0)
         message.channel.send(`lets play a morpion ! But you first need to mention someone to play with !\nfor example : !morpion @Zerk`);
       else if(mentions.length > 2 || (mentions.length == 2 && !_.contains(_.map(mentions, m => m.id), message.author.id) ) )
@@ -356,6 +355,8 @@ class MorpionCommand extends commando.Command {
         message.channel.send(`wtf bro, u mad ?? PLay against urself ?`);
       else if(mentions[0].user.bot)
         message.channel.send(`sorry bro, others bot are not good enought to play morpion with you...`);
+      else if (Morpion.find(mentions[0].id))
+        Morpion.already_have_morpion(Morpion.find(mentions[0].id), message.author, false);
       else
         new Morpion(message.author, mentions[0], message.channel);
     }
