@@ -28,7 +28,7 @@ class Morpion {
   static global_rank(channel) {
     let msg = "";
     const sc_l = scores.length;
-    msg += (`there are ${} players\n`);
+    msg += (`there are ${sc_l} players\n`);
     let max = _.max(Math.round(sc_l / 2), 3);
     let min = _.max(Math.floor(sc_l / 2), 3);
     msg += ('Morpions PGM are => \n');
