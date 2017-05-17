@@ -34,8 +34,8 @@ class Morpion {
     let msg = "";
     const sc_l = scores.length;
     msg += (`there are ${sc_l} players\n`);
-    let max = _.min(Math.round(sc_l / 2), 3);
-    let min = _.min(Math.floor(sc_l / 2), 3);
+    let max = _.min([Math.round(sc_l / 2), 3]);
+    let min = _.min([Math.floor(sc_l / 2), 3]);
     console.log(max);
     console.log(min);
     msg += ('Morpions PGM are => \n');
