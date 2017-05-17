@@ -88,8 +88,9 @@ class Morpion {
   }
 
   recalculate_diags() {
-    recalculate_diag_1(1);
-    recalculate_diag_2(1);
+    let res;
+    res = this.recalculate_diag_1(1);
+    return res || this.recalculate_diag_2(1);
   }
 
   recalculate_score(move) {
