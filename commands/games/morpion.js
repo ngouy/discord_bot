@@ -196,7 +196,7 @@ class Morpion {
     if (!p1_sc) {
       p1_sc = {
         id: this.player1.id,
-        player: this.player1,
+        player: `<@${this.id}>`,
         losed: 0,
         winned: 0,
         nullgame: 0,
@@ -206,7 +206,7 @@ class Morpion {
     if (!p2_sc) {
       p2_sc = {
         id: this.player2.id,
-        player: this.player2,
+        player: `<@${this.di}>`,
         losed: 0,
         winned: 0,
         nullgame: 0,
