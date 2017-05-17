@@ -72,9 +72,12 @@ class Morpion {
     this.player1 = player1;
     this.player2 = player2;
     this.channel = channel;
-    this.current_player = player1;
     this.next_player = player2;
-    this.turn = Math.random() == 1 ? player1 : player2;
+    if (Math.random() == 1) {
+      this.current_player = player1;
+    } else {
+      this.current_player = player2;
+    }
     on_going_games += this;
     this.lets_play();
   }
@@ -190,9 +193,9 @@ class Morpion {
   }
 
   lets_play() {
-    this.channel.send(`${this.current_player} has chalenged ${this.next_player} on a morpion !
-    It has been decided that ${this.turn} begins !`);
-    this.puts_grid();
+    this.channel.send(`${this.player1} has chalenged ${this.player2} on a morpion !
+    It has been decided that ${this.current_player} begins !`);
+    this.channel.send(this.grid());
   }
 
   process(move) {
