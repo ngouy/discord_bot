@@ -246,7 +246,7 @@ class MorpionCommand extends commando.Command {
   async run(message, args) {
     const m = Morpion.find(message.author.id);
     if (m) { m.channel = message.channel; }
-    if (message.content.replace(/ /g,'').toLowerCase() === "!morpion stop") {
+    if (message.content.replace(/ /g,'').toLowerCase() === "!morpionstop") {
       if (!m) {
         message.channel.send("you have no morpion in progress");
         Morpion.if_you_want_to_play(message.channel, message.author);
@@ -260,7 +260,7 @@ class MorpionCommand extends commando.Command {
       } else {
         m.turn();
       }
-    } else if (message.content.replace(/ /g,'').toLowerCase() === "!morpion debug") {
+    } else if (message.content.replace(/ /g,'').toLowerCase() === "!morpiondebug") {
       console.log(on_going_games);
     } else {
       const mentions = _.uniq(message.mentions.members.array());
