@@ -69,44 +69,46 @@ class Morpion {
 
   recalculate_line(y) {
     const grid = this.grid;
-    return grid[0][y] * grid[1][y] *  grid[2][y];
+    const res = grid[0][y] * grid[1][y] *  grid[2][y];
+    if (res === 1 ||res === 8 ) { this.wins(); }
   }
 
   recalculate_column(x) {
     const grid = this.grid;
-    return grid[x][0] * grid[x][1] * grid[x][2];
+    const res =  grid[x][0] * grid[x][1] * grid[x][2];
+    if (res === 1 ||res === 8 ) { this.wins(); }
   }
 
   recalculate_diag_1(xy) {
     const grid = this.grid;
-    return grid[0][0] * grid[1][1] * grid[2][2];
+    const res =  grid[0][0] * grid[1][1] * grid[2][2];
+    if (res === 1 ||res === 8 ) { this.wins(); }
   }
 
   recalculate_diag_2(xy) {
     const grid = this.grid;
-    return grid[0][2] * grid[1][1] * grid[2][0];
+    const res =  grid[0][2] * grid[1][1] * grid[2][0];
+    if (res === 1 ||res === 8 ) { this.wins(); }
   }
 
   recalculate_diags() {
-    let res;
-    res = (res == 1 || res == 8) ? res : this.recalculate_diag_1(1);
-    return (res == 1 || res == 8) ? res : this.recalculate_diag_2(1);
+    this.recalculate_diag_1(1);
+    this.recalculate_diag_2(1);
   }
 
   recalculate_score(move) {
     const x = move[1];
     const y = move[0];
     let res = 0;
-    res = (res == 1 || res == 8) ? res : this.recalculate_line(y);
-    res = (res == 1 || res == 8) ? res : this.recalculate_column(x);
+    this.recalculate_line(y);
+    this.recalculate_column(x);
     if (x == y && x == 1) {
-      res = (res == 1 || res == 8) ? res : this.recalculate_diags();
+      this.recalculate_diags();
     } else if (y == x) {
-      res = (res == 1 || res == 8) ? res : this.recalculate_diag_1(x);
+      this.recalculate_diag_1(x);
     } else if (y + x == 2) {
-      res = (res == 1 || res == 8) ? res : this.recalculate_diag_2(x == 0 ? y : x);
+      this.recalculate_diag_2(x == 0 ? y : x);
     }
-    return res;
   }
 
   /* grid rendering */
@@ -154,9 +156,12 @@ class Morpion {
   }
 
   wins() {
-    this.channel.send(this.get_grid());
-    this.channel.send(`${this.current_player} beat ${this.next_player}. GG feeder`);
-    this.destroy();
+    if (!this.winned) {
+      this.channel.send(this.get_grid());
+      this.channel.send(`${this.current_player} beat ${this.next_player}. GG feeder`);
+      this.winned = true;
+      this.destroy();
+    }
   }
 
   null_match() {
@@ -164,10 +169,8 @@ class Morpion {
     this.destroy();
   }
 
-  how_wins(score) {
-    if (score === 1 || score === 8) {
-      this.wins();
-    } else if (_.include(_.flatten(this.grid), 0)) {
+  how_wins() {
+    if (_.include(_.flatten(this.grid), 0)) {
       this.end_normal_turn();
     } else {
       this.null_match();
@@ -195,8 +198,8 @@ class Morpion {
       return false;
     }
     this.grid[move[0]][move[1]] = number;
-    const score = this.recalculate_score(move);
-    this.how_wins(score);
+    this.recalculate_score(move);
+    this.how_wins();
     return true
   }
 
