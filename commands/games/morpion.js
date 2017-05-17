@@ -10,24 +10,6 @@ const game_cmds = ["A:0", "A:1", "A:2",
                    "B:0", "B:1", "B:2",
                    "C:0", "C:1", "C:2"];
 
-const prime_number_grid = [
-  [0,2 ,29], [0,3 ,31], [0,5 ,37],
-  [0,7 ,41], [0,11,43], [0,13,47],
-  [0,17,53], [0,19,59], [0,23,61]
-];
-
-const player1_wins = [
-  (2  * 3  * 5 ), (7  * 11 * 13), (17 * 19 * 23),
-  (2  * 7  * 17), (3  * 11 * 19), (5  * 13 * 23),
-  (2  * 11 * 23), (17 * 11 * 37)
-]
-
-const player2_wins = [
-  (29 * 31 * 37), (41 * 43 * 47), (53 * 59 * 61),
-  (29 * 41 * 53), (31 * 43 * 59), (37 * 47 * 61),
-  (29 * 43 * 61), (53 * 43 * 37)
-]
-
 let on_going_games = [];
 
 class Morpion {
@@ -62,11 +44,6 @@ class Morpion {
       [0, 0, 0],
       [0, 0, 0]
     ];
-    this.results = [
-      [0,0,0],
-      [0,0,0],
-      [0,0]
-    ];
     this.id = player1.id;
     this.di = player2.id;
     this.player1 = player1;
@@ -95,39 +72,38 @@ class Morpion {
 
   recalculate_column(x) {
     const grid = this.grid;
-    this.result[0][x] = grid[x][0] * prime_number_grid[x][0] *
-                        grid[x][1] * prime_number_grid[x][1] *
-                        grid[x][2] * prime_number_grid[x][2] ;
+    return grid[x][0] * grid[x][1] * grid[x][2];
   }
 
   recalculate_diag_1(xy) {
     const grid = this.grid;
-    this.results[2][0] = grid[0][0] * prime_number_grid[0][0] *
-                         grid[1][1] * prime_number_grid[1][1] *
-                         grid[2][2] * prime_number_grid[2][2] ;
+    return grid[0][0] * grid[1][1] * grid[2][2];
   }
 
   recalculate_diag_2(xy) {
     const grid = this.grid;
-    this.results[2][1] = grid[0][2] * prime_number_grid[0][2] *
-                         grid[1][1] * prime_number_grid[1][1] *
-                         grid[2][0] * prime_number_grid[2][0] ;
+    return grid[0][2] * grid[1][1] * grid[2][0];
   }
 
-  recalculate_diags() { recalculate_diag_1(1); recalculate_diag_2(1); }
+  recalculate_diags() {
+    recalculate_diag_1(1);
+    recalculate_diag_2(1);
+  }
 
   recalculate_score(move) {
     const x = move[1];
     const y = move[0];
-    recalculate_line(y);
-    recalculate_column(x);
+    let res = 0;
+    res = res || recalculate_line(y);
+    res = res || recalculate_column(x);
     if (x == y && x == 1) {
-      recalculate_diags();
+      res = res || recalculate_diags();
     } else if (y == x) {
-      recalculate_diag_1(x);
+      res = res || recalculate_diag_1(x);
     } else if (y + x == 2) {
-      recalculate_diag_2(x == 0 ? y : x);
+      res = res || recalculate_diag_2(x == 0 ? y : x);
     }
+    return res;
   }
 
   /* grid rendering */
@@ -177,9 +153,8 @@ class Morpion {
     this.destroy();
   }
 
-  how_wins(scores) {
-    const wins = _.intersection(scores, this.current_player).size > 0;
-    if (wins) {
+  how_wins(score) {
+    if (score) {
       this.wins();
     } else {
       this.end_normal_turn();
@@ -201,14 +176,23 @@ class Morpion {
   process(move) {
     move[0] = move[0].toLowerCase().charCodeAt(0) - 97;
     const number = (this.current_player == this.player1) ? 1 : 2;
+    if (this.grid[move[0]][move[1]] !== 0) {
+      this.channel.send (`Forbidden move, it's this box (${move[0]}:${move[1]}) is already fill:\n`);
+      this.channel.send(this.get_grid());
+      return;
+    }
     this.grid[move[0]][move[1]] = number;
-    this.recalculate_score(move);
-    const scores = [].concat.apply([], this.results);
-    this.how_wins(scores);
+    this.channel.send(this.get_grid());
+    const score = this.recalculate_score(move);
+    this.how_wins(score);
   }
 
   play(player, move) {
-    channel.send(`#{player.to_s} played ${move}`);
+    if (player.id === this.next_player) {
+      this.channel.send(`It's not your turn to play. It's ${this.current_player} one`);
+      return;
+    }
+    this.channel.send(`#{player.to_s} played ${move}`);
     this.last_move = move;
     if (this.player1.id === player.id) {
       this.current_player = this.player1;
