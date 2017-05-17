@@ -156,11 +156,18 @@ class Morpion {
     this.destroy();
   }
 
+  null_match() {
+    this.channel.send(`null match between ${this.player1} and ${this.player2}, well played. Lets go for another morpions dudes !`);
+    this.destroy();
+  }
+
   how_wins(score) {
     if (score) {
       this.wins();
-    } else {
+    } else if (_.include(_.flatten(this.grid), 0)) {
       this.end_normal_turn();
+    } else {
+      this.null_match();
     }
   }
 
