@@ -260,10 +260,8 @@ class MorpionCommand extends commando.Command {
       } else {
         m.turn();
       }
-    } else if (message.content.replace(/ /g,'').toLowerCase() === "!morpiondebug") {
-      on_going_games.forEach(m => {
-        m.turn();
-      });
+    } else if (message.content.replace(/ /g,'').toLowerCase() === "!morpion debug") {
+      console.log(on_going_games);
     } else {
       const mentions = _.uniq(message.mentions.members.array());
       if (m) {
