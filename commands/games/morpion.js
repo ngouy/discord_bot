@@ -1,7 +1,6 @@
 /*
 ** to do
 ** - print global score
-** - print personal score
 */
 
 const commando = require('discord.js-commando');
@@ -11,12 +10,23 @@ const game_cmds = ["A:0", "A:1", "A:2",
                    "C:0", "C:1", "C:2"];
 
 let on_going_games = [];
+let scores = [];
 
 class Morpion {
 
   /*
   ** static functions
   */
+
+  static my_score(player, channel) {
+    const score = _.findWhere(scores, {id: player.id});
+    if (score) {
+      channel.send(`${player}:\n\t- winned games: ${score.winned},\n\t- lost games: ${score.losed},\n\tnull: ${score.nullgame}`);
+    } else {
+      channel.send('you havent play at morpion yet !');
+      Morpion.if_you_want_to_play(channel, player);
+    }
+  }
 
   static find(id_or_di) {
     return _.findWhere(on_going_games, {id: id_or_di}) || _.findWhere(on_going_games, {di: id_or_di}) || null;
@@ -155,17 +165,56 @@ class Morpion {
     this.wins();
   }
 
+  push_scores(null_match=false) {
+    let p1_sc = _.findWhere(this.scores, id: this.player1.id);
+    let p2_sc = _.findWhere(this.scores, id: this.player2.id);
+    if (!p1_sc) {
+      p1_sc = {
+        id: this.player1.id,
+        player: this.player1,
+        losed: 0,
+        winned: 0,
+        nullgame: 0,
+      }
+      scores.push(p1_sc);
+    }
+    if (!p2_sc) {
+      p2_sc = {
+        id: this.player2.id,
+        player: this.player2,
+        losed: 0,
+        winned: 0,
+        nullgame: 0,
+      }
+      scores.push(p2_sc);
+    }
+    if (null_match) {
+      p2_sc.nullgame = p2_sc.nullgame + 1;
+      p1_sc.nullgame = p1_sc.nullgame + 1;
+    } else {
+      if(p1_sc.id == this.current_player.id) {
+        p1_sc.winned = p1_sc.winned + 1
+        p2_sc.losed = p2_sc.losed + 1
+      } else {
+        p2_sc.winned = p2_sc.winned + 1
+        p1_sc.losed = p1_sc.losed + 1
+      }
+    }
+  }
+
   wins() {
     if (!this.winned) {
       this.channel.send(this.get_grid());
       this.channel.send(`${this.current_player} beat ${this.next_player}. GG feeder`);
       this.winned = true;
+      this.push_scores(false);
       this.destroy();
     }
   }
 
   null_match() {
     this.channel.send(`null match between ${this.player1} and ${this.player2}, well played. Lets go for another morpions dudes !`);
+    this.push_scores(true);
     this.destroy();
   }
 
@@ -247,8 +296,12 @@ class MorpionCommand extends commando.Command {
   async run(message, args) {
     const m = Morpion.find(message.author.id);
     if (m) { m.channel = message.channel; }
-    const short_mess = message.content.replace(/ /g,'').toLowerCase()
-    if (short_mess === "!morpion/ff" || short_mess == "!morpionstop") {
+    const short_mess = message.content.replace(/ /g,'').toLowerCase();
+    if (short_mess == "!morpionrank") {
+      Morpion.my_score(message.author, message.channel);
+    } else if (short_mess === "!morpionbest") {
+      message.channel.send('not implemented yet');
+    } else if (short_mess === "!morpion/ff" || short_mess == "!morpionstop") {
       if (!m) {
         message.channel.send("you have no morpion in progress");
         Morpion.if_you_want_to_play(message.channel, message.author);
