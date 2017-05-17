@@ -68,7 +68,8 @@ class Morpion {
   /* Score calculation */
 
   recalculate_line(y) {
-    this.result[1][y] = this.grid[y].reduce((a, b, index) => a + prime_number_grid[y][index] * b);
+    const grid = this.grid;
+    return grid[0][y] * grid[1][y] *  grid[2][y];
   }
 
   recalculate_column(x) {
@@ -194,7 +195,7 @@ class Morpion {
     console.log(this.next_player.id);
     console.log(this.current_player.id);
     console.log('---------');
-    if (player.id === this.next_player) {
+    if (player.id === this.next_player.id) {
       this.channel.send(`It's not your turn to play. It's ${this.current_player} one`);
       return;
     }
