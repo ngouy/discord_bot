@@ -104,7 +104,7 @@ class Morpion {
     const x = move[1];
     const y = move[0];
     let res = 0;
-    console.log([this.get_grid[0].toString(), this.get_grid[1].toString(), this.get_grid[2].toString()]);
+    console.log([this.grid[0].toString(), this.grid[1].toString(), this.grid[2].toString()]);
     this.recalculate_line(y);
     this.recalculate_column(x);
     if (x == y && x == 1) {
