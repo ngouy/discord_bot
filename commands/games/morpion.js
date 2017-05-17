@@ -49,11 +49,12 @@ class Morpion {
     this.player1 = player1;
     this.player2 = player2;
     this.channel = channel;
-    this.next_player = player2;
-    if (Math.random() == 1) {
+    if (Math.random() === 1) {
       this.current_player = player1;
+      this.next_player = player2;
     } else {
       this.current_player = player2;
+      this.next_player = player1;
     }
     on_going_games.push(this);
     this.lets_play();
