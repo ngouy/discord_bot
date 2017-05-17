@@ -166,8 +166,8 @@ class Morpion {
   }
 
   push_scores(null_match=false) {
-    let p1_sc = _.findWhere(this.scores, id: this.player1.id);
-    let p2_sc = _.findWhere(this.scores, id: this.player2.id);
+    let p1_sc = _.findWhere(this.scores, {id: this.player1.id});
+    let p2_sc = _.findWhere(this.scores, {id: this.player2.id});
     if (!p1_sc) {
       p1_sc = {
         id: this.player1.id,
