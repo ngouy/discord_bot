@@ -122,6 +122,7 @@ class Morpion {
   }
 
   recalculate_diags() {
+    const grid = this.grid;
     let res =  grid[0][0] * grid[1][1] * grid[2][2];
     if (res === 1 ||res === 8 ) { this.wins(); }
     res =  grid[0][2] * grid[1][1] * grid[2][0];
