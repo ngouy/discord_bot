@@ -72,6 +72,8 @@ class Morpion {
     this.player1 = player1;
     this.player2 = player2;
     this.channel = channel;
+    this.current_player = player1;
+    this.next_player = player2;
     this.turn = Math.random() == 1 ? player1 : player2;
     on_going_games += this;
     this.lets_play();
@@ -188,7 +190,7 @@ class Morpion {
   }
 
   lets_play() {
-    message.channel.send(`${message.author} has chalenged ${mentions[0]} on a morpion !
+    this.channel.send(`${this.current_player} has chalenged ${this.next_player} on a morpion !
     It has been decided that ${this.turn} begins !`);
     this.puts_grid();
   }
