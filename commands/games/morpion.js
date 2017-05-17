@@ -195,14 +195,14 @@ class Morpion {
       return;
     }
     this.last_move = move;
+    this.process(move.split(':'));
     if (this.player1.id === player.id) {
-      this.current_player = this.player1;
-      this.next_player = this.player2;
-    } else {
       this.current_player = this.player2;
       this.next_player = this.player1;
+    } else {
+      this.current_player = this.player1;
+      this.next_player = this.player2;
     }
-    this.process(move.split(':'));
   }
 
 }
