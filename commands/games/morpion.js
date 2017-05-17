@@ -10,6 +10,13 @@ const game_cmds = ["A:0", "A:1", "A:2",
                    "C:0", "C:1", "C:2"];
 
 let on_going_games = [];
+fs.readFile('scores.json', 'utf8', function readFileCallback(err, data){
+    if (err){
+        console.log(err);
+    } else {
+    on_going_games = JSON.parse(data);
+  }
+});
 let scores = [];
 // {
 //   id: this.player1.id,
@@ -36,22 +43,14 @@ class Morpion {
     msg += (`there are ${sc_l} players\n`);
     let max = _.min([Math.round(sc_l / 2), 3]);
     let min = _.min([Math.floor(sc_l / 2), 3]);
-    console.log(max);
-    console.log(min);
     msg += ('Morpions PGM are => \n');
-    console.log('winners');
     for (let i = 1; i <= max; i++) {
       let cur_score = scores[i - 1];
-      console.log(i);
-      console.log(`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
       msg += (`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
     }
-    console.log('loosers');
     msg += ('\napplause them, praise them, ask them how to the fuck you should play\n\nMorpions NOOBS FEEDERS are => \n');
     for (let i = sc_l - min + 1; i <= sc_l; i++) {
-      console.log(i);
       let cur_score = scores[i - 1];
-      console.log(`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
       msg += (`\t${i} - ${cur_score.player} ! (w:${cur_score.winned}, l:${cur_score.losed}, n:${cur_score.nullgame})\n`);
     }
     msg += '\nThe best you can do is to forget them, they are not your friends, you dont even know them. How the fuck they can be in this channel to play morpion !?'
@@ -226,6 +225,8 @@ class Morpion {
       }
     }
     scores = _.sortBy(scores, sc => [sc.winned,  -sc.losed, sc.nullgame]).reverse();
+    var json = JSON.stringify(scores);
+    fs.writeFile('scores.json', json, 'utf8');
   }
 
   wins() {
@@ -263,11 +264,12 @@ class Morpion {
     this.channel.send(`${this.player1} has chalenged ${this.player2} on a morpion !
     It has been decided that ${this.current_player} begins !`);
     this.channel.send(this.get_grid());
+    this.channel.send('to play, just write what you want to play eg: `A:1`');
   }
 
   process(move) {
     move[0] = move[0].toLowerCase().charCodeAt(0) - 97;
-    const number = (this.current_player == this.player1) ? 1 : 2;
+    st number = (this.current_player == this.player1) ? 1 : 2;
     if (this.grid[move[0]][move[1]] !== 0) {
       this.channel.send (`Forbidden move, this box (${String.fromCharCode(65 + move[0])}:${move[1]}) is already fill:\n`);
       this.channel.send(this.get_grid());
