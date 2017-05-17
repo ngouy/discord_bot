@@ -124,7 +124,7 @@ class Morpion {
       for(let y = 0; y < 3; y++) {
         grid += this.get_case(x, y);
       }
-      grid += `| ${x === 0 ? A : x === 1 ? B : C}\n`;
+      grid += `| ${x === 0 ? 'A' : x === 1 ? 'B' : 'C'}\n`;
     }
     grid += "------------------\n";
     return grid;
