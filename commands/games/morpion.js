@@ -70,6 +70,8 @@ class Morpion {
   recalculate_line(y) {
     const grid = this.grid;
     const res = grid[0][y] * grid[1][y] *  grid[2][y];
+    console.log(`y = ${y}`);
+    console.log(res)
     if (res === 1 ||res === 8 ) { this.wins(); }
   }
 
@@ -102,6 +104,7 @@ class Morpion {
     const x = move[1];
     const y = move[0];
     let res = 0;
+    console.log([this.get_grid[0].toString(), this.get_grid[1].toString(), this.get_grid[2].toString()]);
     this.recalculate_line(y);
     this.recalculate_column(x);
     if (x == y && x == 1) {
