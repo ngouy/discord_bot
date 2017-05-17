@@ -78,7 +78,7 @@ class Morpion {
     } else {
       this.current_player = player2;
     }
-    on_going_games += this;
+    on_going_games.push(this);
     this.lets_play();
   }
 
