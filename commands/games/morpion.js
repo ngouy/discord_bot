@@ -185,22 +185,15 @@ class Morpion {
       return;
     }
     this.grid[move[0]][move[1]] = number;
-    this.channel.send(this.get_grid());
     const score = this.recalculate_score(move);
     this.how_wins(score);
   }
 
   play(player, move) {
-    console.log('---------');
-    console.log(player.id);
-    console.log(this.next_player.id);
-    console.log(this.current_player.id);
-    console.log('---------');
     if (player.id === this.next_player.id) {
       this.channel.send(`It's not your turn to play. It's ${this.current_player} one`);
       return;
     }
-    this.channel.send(`#{player.to_s} played ${move}`);
     this.last_move = move;
     if (this.player1.id === player.id) {
       this.current_player = this.player1;
