@@ -189,11 +189,12 @@ class Morpion {
     if (this.grid[move[0]][move[1]] !== 0) {
       this.channel.send (`Forbidden move, it's this box (${move[0]}:${move[1]}) is already fill:\n`);
       this.channel.send(this.get_grid());
-      return;
+      return false;
     }
     this.grid[move[0]][move[1]] = number;
     const score = this.recalculate_score(move);
     this.how_wins(score);
+    return true
   }
 
   play(player, move) {
@@ -202,13 +203,14 @@ class Morpion {
       return;
     }
     this.last_move = move;
-    this.process(move.split(':'));
-    if (this.player1.id === player.id) {
-      this.current_player = this.player2;
-      this.next_player = this.player1;
-    } else {
-      this.current_player = this.player1;
-      this.next_player = this.player2;
+    if (this.process(move.split(':'))) {
+      if (this.player1.id === player.id) {
+        this.current_player = this.player2;
+        this.next_player = this.player1;
+      } else {
+        this.current_player = this.player1;
+        this.next_player = this.player2;
+      }
     }
   }
 
