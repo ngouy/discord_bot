@@ -44,6 +44,8 @@ class Morpion {
       Morpion.if_you_want_to_play(channel);
       return;
     }
+    scores = _.sortBy(scores, sc => [sc.winned,  -sc.losed, sc.nullgame]);
+    scores.reverse();
     let msg = "";
     const sc_l = scores.length;
     msg += (`there are ${sc_l} players\n`);
