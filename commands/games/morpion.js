@@ -231,7 +231,8 @@ class Morpion {
         p1_sc.losed = p1_sc.losed + 1
       }
     }
-    scores = _.sortBy(scores, sc => [sc.winned,  -sc.losed, sc.nullgame]).reverse();
+    scores = _.sortBy(scores, sc => [sc.winned,  -sc.losed, sc.nullgame]);
+    scores.reverse();
     var json = JSON.stringify(scores);
     fs.writeFile('scores.json', json, 'utf8');
   }
